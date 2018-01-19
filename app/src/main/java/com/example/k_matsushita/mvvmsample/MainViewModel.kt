@@ -2,7 +2,6 @@ package com.example.k_matsushita.mvvmsample
 
 import android.arch.lifecycle.*
 import android.databinding.ObservableField
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
@@ -25,10 +24,9 @@ class MainViewModel : ViewModel(), LifecycleObserver {
         NetUtil.connpassAPI.event()
                 .doOnSubscribe { isLoading.set(true) }
                 .doFinally { isLoading.set(false) }
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = {
-                            events.value = it
+                            events.postValue(it)
                         }
                 ).addTo(disposeBug)
     }
